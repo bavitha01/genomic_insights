@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-import sequence_analysis
-
+from sequence_analysis import fetch_sequence
+from sequence_analysis import calculate_gc_content
 # Example: Plot GC content of multiple sequences
 def plot_gc_content(sequence_ids):
     gc_values = []
