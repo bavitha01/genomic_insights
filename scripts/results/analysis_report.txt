@@ -1,0 +1,3 @@
+Sequence ID: NM_007294, GC Content: 41.77%
+Sequence ID: NM_000546, GC Content: 53.38%
+Sequence ID: NM_005228, GC Content: 47.78%

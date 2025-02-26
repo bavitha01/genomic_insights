@@ -1,0 +1,16 @@
+# Virtual environment files
+venv/
+.venv/
+env/
+venv
+
+# IDE-specific files (IntelliJ IDEA)
+.idea/
+*.iml
+
+# Large data files (if data files are too large to store in Git)
+data/
+
+# Python cache files
+__pycache__/
+*.pyc
