@@ -27,7 +27,7 @@ def calculate_gc_content(record):
         print(f"Error calculating GC content: {e}")
         return None
 
-# Example: Fetch BRCA1 gene sequence
+# Example: Fetch BRCA1
 brca1_record = fetch_sequence("NM_007294")
 if brca1_record:
     print(f"Sequence ID: {brca1_record.id}")
