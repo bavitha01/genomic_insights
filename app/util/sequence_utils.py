@@ -6,7 +6,7 @@ import re
 # Set email for NCBI access - this is required for GenBank API access
 Entrez.email = "bavithareddy08@gmail.com"  # Update with your real email for production use
 Entrez.tool = "GenomicInsightsWebApp"
-Entrez.api_key = None  # Add your API key if you have one for higher rate limits
+Entrez.api_key = os.environ.get("f8d4168273ea9ff4fe422025e6ec3fd65a08")  # Add your API key if you have one for higher rate limits
 
 def process_fasta_file(file_path):
     """
