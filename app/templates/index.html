@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genomic Insights</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <header class="bg-primary text-white py-4">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-dna fs-1 me-3"></i>
+                <h1>Genomic Insights</h1>
+            </div>
+            <p class="lead mb-0">Analyze and visualize genomic data with ease</p>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-light">
+                        <h3><i class="bi bi-file-earmark-text me-2"></i>Upload FASTA File</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Upload a FASTA file containing DNA sequences for analysis.</p>
+                        <form id="fastaUploadForm" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="fastaFile" class="form-label">Select FASTA File</label>
+                                <input class="form-control" type="file" id="fastaFile" name="fastaFile" accept=".fasta,.fa,.fna">
+                                <div class="form-text">
+                                    File should be in standard FASTA format with sequence headers.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload me-2"></i>Upload & Analyze
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-light">
+                        <h3><i class="bi bi-search me-2"></i>Search by Sequence ID</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Search for a DNA sequence by its ID in GenBank database.</p>
+                        <form id="sequenceSearchForm">
+                            <div class="mb-3">
+                                <label for="sequenceId" class="form-label">Sequence ID</label>
+                                <input type="text" class="form-control" id="sequenceId" placeholder="Enter sequence ID">
+                                <div class="form-text">
+                                    Example IDs: NM_007294 (BRCA1), NM_000546 (TP53), NM_005228 (EGFR)
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search me-2"></i>Search & Analyze
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick info section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h3><i class="bi bi-info-circle me-2"></i>About This Tool</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="bi bi-calculator fs-1 text-primary mb-2"></i>
+                                    <h4>GC Content</h4>
+                                    <p>Calculate the percentage of G and C nucleotides in your DNA sequence.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="bi bi-arrow-repeat fs-1 text-primary mb-2"></i>
+                                    <h4>Transcription</h4>
+                                    <p>Convert DNA to RNA by replacing thymine (T) with uracil (U).</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-box text-center p-3">
+                                    <i class="bi bi-diagram-3 fs-1 text-primary mb-2"></i>
+                                    <h4>Translation</h4>
+                                    <p>Convert DNA sequences to amino acid sequences using the standard genetic code.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsContainer" class="mt-5 d-none">
+            <h2><i class="bi bi-bar-chart-line me-2"></i>Analysis Results</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="resultTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab">Summary</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="sequence-tab" data-bs-toggle="tab" data-bs-target="#sequence" type="button" role="tab">Sequence</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="transcription-tab" data-bs-toggle="tab" data-bs-target="#transcription" type="button" role="tab">Transcription</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="translation-tab" data-bs-toggle="tab" data-bs-target="#translation" type="button" role="tab">Translation</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-3" id="resultTabsContent">
+                        <div class="tab-pane fade show active" id="summary" role="tabpanel">
+                            <div id="summaryContent">
+                                <!-- Summary content will be inserted here -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="sequence" role="tabpanel">
+                            <div id="sequenceContent" class="sequence-display">
+                                <!-- Sequence content will be inserted here -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="transcription" role="tabpanel">
+                            <div id="transcriptionContent" class="sequence-display">
+                                <!-- Transcription content will be inserted here -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="translation" role="tabpanel">
+                            <div id="translationContent" class="sequence-display">
+                                <!-- Translation content will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-2">© 2025 Genomic Insights | All Rights Reserved</p>
+            <p class="small text-muted">Uses NCBI GenBank API for sequence retrieval. <a href="https://www.ncbi.nlm.nih.gov/genbank/" target="_blank">Learn more about GenBank</a>.</p>
+        </div>
+    </footer>
+
+    <!-- Loading spinner -->
+    <div id="loadingOverlay" class="loading-overlay d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Processing...</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 

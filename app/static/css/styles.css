@@ -1,0 +1,161 @@
+/* Main Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: #f8f9fa;
+    padding: 1rem 1.25rem;
+}
+
+/* Forms */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+}
+
+/* Results Section */
+.sequence-display {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+}
+
+/* Feature Boxes */
+.feature-box {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+/* Sequence Highlighting */
+.nucleotide-a { color: #FF5722; font-weight: 500; }
+.nucleotide-t { color: #2196F3; font-weight: 500; }
+.nucleotide-g { color: #4CAF50; font-weight: 500; }
+.nucleotide-c { color: #9C27B0; font-weight: 500; }
+.nucleotide-u { color: #607D8B; font-weight: 500; }
+
+/* Animation for loading */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Table Styling */
+.table-results {
+    width: 100%;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table-results th {
+    background-color: #f1f8ff;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table-results td, .table-results th {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+/* GC Content Bar */
+.gc-content-bar {
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.gc-content-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.8s ease;
+}
+
+/* Tab panel styling */
+.nav-tabs .nav-link {
+    color: #6c757d;
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: 600;
+    color: #0d6efd;
+    border-bottom: 2px solid #0d6efd;
+}
+
+/* Position number in sequences */
+.position-number {
+    color: #6c757d;
+    font-size: 0.85em;
+    margin-right: 0.5rem;
+}
+
+/* Download buttons for sequences */
+.btn-outline-primary {
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
+} 
