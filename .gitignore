@@ -1,16 +1,41 @@
-# Virtual environment files
+# Virtual environment
 venv/
-.venv/
 env/
-venv
+.env/
 
-# IDE-specific files (IntelliJ IDEA)
-.idea/
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# User uploads
+uploads/*
+!uploads/.gitkeep
+
+# IDE files
+.idea/          # PyCharm/IntelliJ project settings
+.vscode/        # VSCode settings
+*.swp
+*.swo
 *.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Testing
+.coverage
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
 
 # Large data files (if data files are too large to store in Git)
 data/
-
-# Python cache files
-__pycache__/
-*.pyc
