@@ -54,12 +54,13 @@ The application integrates with the NCBI GenBank API. To improve API access reli
 
 1. Update the email in `app/util/sequence_utils.py`:
    ```python
-   Entrez.email = "your_email@example.com"  # Replace with your actual email
+   Entrez.email = "bavithareddy08@gmail.com"  # Replace with your actual email
    ```
 
 2. For frequent use, consider [obtaining an NCBI API key](https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities/) and adding it to the code:
    ```python
-   Entrez.api_key = "your_api_key"  # Add your API key here
+   import os
+   Entrez.api_key = os.environ.get("NCBI_API_KEY")
    ```
 
 ## Project Structure
