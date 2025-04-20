@@ -17,7 +17,7 @@ A bioinformatics web application designed to analyze and visualize genomic data.
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/genomic_insights.git
+   git clone https://github.com/bavitha01/genomic_insights
    cd genomic_insights
    ```
 
