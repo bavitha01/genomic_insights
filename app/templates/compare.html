@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Sequences | Genomic Insights</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-dark" style="position: relative; z-index: 9999;">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
+                    <i class="bi bi-dna me-2"></i>
+                </a>
+                <div>
+                    <a href="{{ url_for('main.analyze_page') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 me-2" style="position: relative; z-index: 9999;">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Analysis
+                    </a>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-light btn-sm rounded-pill px-3" style="position: relative; z-index: 9999;">
+                        <i class="bi bi-house-door-fill me-1"></i> Home
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="options-page">
+        <!-- Background Image -->
+        <div class="options-page-bg"></div>
+        
+        <div class="container py-5 position-relative">
+            <div class="text-center mb-5">
+                <h1 class="options-title display-3">Sequence Comparison</h1>
+                <div class="separator"><span></span></div>
+        </div>
+
+            <!-- Input Methods Section -->
+            <div id="inputMethods">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="option-card p-4">
+        <div class="row">
+                                <!-- Input Method Tabs -->
+                                <div class="col-12 mb-4">
+                                    <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="search-tab" data-bs-toggle="tab" data-bs-target="#idInput" type="button" role="tab" aria-controls="idInput" aria-selected="true">
+                                                <i class="bi bi-search me-2"></i>Search by IDs
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#fileInput" type="button" role="tab" aria-controls="fileInput" aria-selected="false">
+                                                <i class="bi bi-file-text me-2"></i>Upload FASTA
+                                </button>
+                            </li>
+                        </ul>
+                                </div>
+
+                                <!-- Input Forms -->
+                                <div class="col-12">
+                                    <div class="tab-content">
+                                        <!-- ID Input -->
+                                        <div class="tab-pane fade show active" id="idInput" role="tabpanel" aria-labelledby="search-tab">
+                                            <form id="idCompareForm">
+                                                <div class="mb-4" id="sequenceIdInputs">
+                                                    <div class="input-group mb-3">
+                                                        <input type="text" class="form-control" name="sequenceIds[]" placeholder="Enter sequence ID (e.g., NM_007294)">
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <input type="text" class="form-control" name="sequenceIds[]" placeholder="Enter sequence ID (e.g., NM_000546)">
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex gap-3">
+                                                    <button type="button" class="btn option-btn analyze-btn" id="addIdField">
+                                                        <i class="bi bi-plus-lg mex-2"></i>Add Another ID
+                                                    </button>
+                                                    <button type="submit" class="btn option-btn compare-btn">
+                                                        <i class="bi bi-search me-2"></i>Compare Sequences
+                                            </button>
+                                        </div>
+                                            </form>
+                                        </div>
+                                        
+                                        <!-- File Input -->
+                                        <div class="tab-pane fade" id="fileInput" role="tabpanel" aria-labelledby="upload-tab">
+                                            <form id="fastaCompareForm">
+                                                <div class="upload-zone p-4 mb-4 position-relative">
+                                                    <div class="text-center">
+                                                        <i class="bi bi-cloud-arrow-up display-4 text-primary"></i>
+                                                        <h3 class="h5 mt-3 mb-2">Drag FASTA file here or click to browse</h3>
+                                                        <p class="text-muted small">File should contain multiple sequences</p>
+                                        </div>
+                                                    <input type="file" id="fastaFile" name="fastaFile" accept=".fasta,.fa,.fna" class="upload-input">
+                                    </div>
+                                                <button type="submit" class="btn option-btn compare-btn w-100">
+                                                    <i class="bi bi-arrow-right me-2"></i>Compare Sequences
+                                    </button>
+                                </form>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- Results Section -->
+            <div id="resultsTable" class="d-none">
+                <div class="row justify-content-center g-4">
+                    <!-- Overview Card -->
+                    <div class="col-lg-12">
+                        <div class="option-card p-4">
+                            <h3 class="fw-bold mb-4">Overview</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sequence ID</th>
+                                            <th>Length</th>
+                                            <th>GC Content</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="overviewTableBody">
+                                        <!-- Will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GC Content Chart -->
+                    <div class="col-lg-8">
+                        <div class="option-card p-4">
+                            <h3 class="fw-bold mb-4">GC Content Comparison</h3>
+                            <div style="height: 400px;">
+                                <canvas id="gcContentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="col-lg-4">
+                        <div class="option-card p-4">
+                            <h3 class="fw-bold mb-4">Statistics</h3>
+                            <div id="gcStats">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="genomics-footer py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 Genomic Insights | All rights reserved.</p>
+        </div>
+    </footer>
+
+    <style>
+        .upload-zone {
+            border: 2px dashed rgba(13, 110, 253, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-zone:hover {
+            border-color: #3a86ff;
+            background-color: rgba(58, 134, 255, 0.05);
+        }
+
+        .upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .nav-pills .nav-link {
+            z-index: 2;
+            position: relative;
+            color: #2a5298;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid rgba(42, 82, 152, 0.2);
+            margin: 0 4px;
+        }
+
+        .nav-pills .nav-link:hover {
+            color: #1e3c72;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            color: #1e3c72;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            color: #2a5298;
+            border: 1px solid rgba(42, 82, 152, 0.2);
+        }
+
+        .analyze-btn, .compare-btn {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #2a5298;
+            border: 1px solid rgba(42, 82, 152, 0.2);
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #1e3c72;
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.1);
+            border-color: rgba(42, 82, 152, 0.3);
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/compare.js') }}"></script>
+
+    <!-- Chat Bot Bubble -->
+    <div class="chat-bubble" id="chatBubble">
+        <div class="chat-bubble-button" onclick="toggleChatDialog()">
+            <i class="bi bi-chat-dots-fill"></i>
+        </div>
+        <div class="chat-dialog" id="chatDialog">
+            <div class="chat-header">
+                <h5 class="mb-0">About Genomic Insights</h5>
+                <button class="close-button" onclick="toggleChatDialog()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="chat-content">
+                <div class="chat-message bot">
+                    👋 Hi there! Want to know more about Genomic Insights?
+                </div>
+                <div class="chat-message bot">
+                    Check out our GitHub repository for:
+                    <ul class="mt-2">
+                        <li>Source code</li>
+                        <li>Documentation</li>
+                        <li>Contributing guidelines</li>
+                        <li>Feature requests</li>
+                    </ul>
+                </div>
+                <a href="https://github.com/bavitha01/genomic_insights" target="_blank" class="btn btn-primary w-100 mt-3">
+                    <i class="bi bi-github me-2"></i>Visit Repository
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Chat Bubble Styles */
+        .chat-bubble {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        .chat-bubble-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3a86ff 0%, #60a5fa 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chat-bubble-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+        }
+
+        .chat-bubble-button i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .chat-dialog {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 300px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-dialog.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+
+        .chat-header {
+            padding: 16px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 16px 16px 0 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .chat-header h5 {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #2d3748;
+            transform: scale(1.1);
+        }
+
+        .chat-content {
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .chat-message.bot {
+            background: #f0f7ff;
+            border-left: 3px solid #3a86ff;
+        }
+
+        .chat-message ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+            color: #64748b;
+        }
+
+        .chat-message ul li {
+            margin-bottom: 4px;
+        }
+
+        .chat-message ul li:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+
+    <script>
+        function toggleChatDialog() {
+            const dialog = document.getElementById('chatDialog');
+            dialog.classList.toggle('show');
+        }
+    </script>
+</body>
+</html> 
