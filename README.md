@@ -108,14 +108,6 @@ To test the application, you can use:
 - **Architecture**: MVC (Model-View-Controller)
 - **API**: NCBI GenBank API (Entrez E-utilities)
 
-## Future Enhancements
-
-- Multiple sequence alignment
-- Phylogenetic tree generation
-- Secondary structure prediction
-- Interactive sequence visualization tools
-- Batch processing of multiple GenBank IDs
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
