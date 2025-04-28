@@ -2,8 +2,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get form elements
     const fastaUploadForm = document.getElementById('fastaUploadForm');
     const sequenceSearchForm = document.getElementById('sequenceSearchForm');
+    const genbankCompareForm = document.getElementById('genbankCompareForm');
+    const fastaCompareForm = document.getElementById('fastaCompareForm');
+    const addGenbankIdBtn = document.getElementById('addGenbankIdBtn');
     const loadingOverlay = document.getElementById('loadingOverlay');
     const resultsContainer = document.getElementById('resultsContainer');
+    const comparisonResultsContainer = document.getElementById('comparisonResultsContainer');
+    const showComparisonBtn = document.getElementById('showComparisonBtn');
+    const showRegularResultsBtn = document.getElementById('showRegularResultsBtn');
+
+    // Chart references
+    let gcContentChart = null;
+    
+    // Store results globally within this scope
+    let lastAnalysisResults = null;
+    let lastComparisonResults = null;
 
     // Handle FASTA file upload
     fastaUploadForm.addEventListener('submit', function(e) {
@@ -110,6 +123,153 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Add button for GenBank IDs
+    addGenbankIdBtn.addEventListener('click', function() {
+        const container = document.getElementById('genbankIdContainer');
+        const inputDiv = document.createElement('div');
+        inputDiv.className = 'genbank-id-input mb-2';
+        inputDiv.innerHTML = `
+            <div class="input-group">
+                <input type="text" class="form-control" name="sequenceIds[]" placeholder="Enter sequence ID">
+                <button type="button" class="btn btn-outline-danger remove-id-btn">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(inputDiv);
+        
+        // Add event listener for the remove button
+        inputDiv.querySelector('.remove-id-btn').addEventListener('click', function() {
+            container.removeChild(inputDiv);
+        });
+    });
+
+    // Handle GenBank sequence comparison form
+    genbankCompareForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get all sequence IDs
+        const inputs = this.querySelectorAll('input[name="sequenceIds[]"]');
+        const sequenceIds = Array.from(inputs).map(input => input.value.trim()).filter(id => id !== '');
+        
+        if (sequenceIds.length < 2) {
+            alert('Please enter at least two sequence IDs for comparison.');
+            return;
+        }
+        
+        showLoading();
+        
+        fetch('/compare', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ sequence_ids: sequenceIds })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Error comparing sequences');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            hideLoading();
+            if (data.result) {
+                displayComparisonResults(data.result);
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            alert('Error: ' + error.message);
+            console.error('Error:', error);
+        });
+    });
+    
+    // Handle FASTA file comparison form
+    fastaCompareForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('compareFile');
+        if (!fileInput.files.length) {
+            alert('Please select a FASTA file containing multiple sequences.');
+            return;
+        }
+        
+        showLoading();
+        
+        // First upload the file
+        const formData = new FormData();
+        formData.append('fastaFile', fileInput.files[0]);
+        
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Error uploading file');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.results && data.results.length >= 2) {
+                // Now that we have results, request comparison
+                return fetch('/compare', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ file_id: fileInput.files[0].name })
+                });
+            } else {
+                throw new Error('Not enough valid sequences found in the file (minimum 2 required).');
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Error comparing sequences');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            hideLoading();
+            if (data.result) {
+                displayComparisonResults(data.result);
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            alert('Error: ' + error.message);
+            console.error('Error:', error);
+        });
+    });
+
+    // Toggle between results views
+    showComparisonBtn.addEventListener('click', function() {
+        if (lastComparisonResults) {
+            resultsContainer.classList.add('d-none');
+            comparisonResultsContainer.classList.remove('d-none');
+            displayComparisonResults(lastComparisonResults);
+        } else {
+            alert('No comparison results available. Please perform a comparison first.');
+        }
+    });
+    
+    showRegularResultsBtn.addEventListener('click', function() {
+        if (lastAnalysisResults) {
+            comparisonResultsContainer.classList.add('d-none');
+            resultsContainer.classList.remove('d-none');
+        } else {
+            alert('No analysis results available. Please analyze a sequence first.');
+        }
+    });
+
     // Show loading overlay
     function showLoading() {
         loadingOverlay.classList.remove('d-none');
@@ -127,8 +287,33 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Store results globally
+        lastAnalysisResults = results;
+        
+        // If we have multiple sequences, show the comparison button
+        if (results.length > 1) {
+            showComparisonBtn.classList.remove('d-none');
+            
+            // Create comparison data and store it
+            const comparisonData = {
+                sequences: results.map(result => ({
+                    seq_id: result.seq_id,
+                    length: result.length,
+                    gc_content: result.gc_content
+                })),
+                gc_content: {
+                    labels: results.map(result => result.seq_id),
+                    values: results.map(result => result.gc_content)
+                }
+            };
+            lastComparisonResults = comparisonData;
+        } else {
+            showComparisonBtn.classList.add('d-none');
+        }
+
         // Show results container
         resultsContainer.classList.remove('d-none');
+        comparisonResultsContainer.classList.add('d-none');
 
         // Format and display summary
         const summaryContent = document.getElementById('summaryContent');
@@ -254,26 +439,104 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return formattedSequence;
     }
+
+    // Display comparison results
+    function displayComparisonResults(results) {
+        // Store results globally
+        lastComparisonResults = results;
+        
+        // Show comparison results container
+        comparisonResultsContainer.classList.remove('d-none');
+        resultsContainer.classList.add('d-none');
+        
+        // Clear existing chart if it exists
+        if (gcContentChart) {
+            gcContentChart.destroy();
+        }
+        
+        // Create GC content chart
+        const gcContentCtx = document.getElementById('gcContentChart').getContext('2d');
+        gcContentChart = new Chart(gcContentCtx, {
+            type: 'bar',
+            data: {
+                labels: results.gc_content.labels,
+                datasets: [{
+                    label: 'GC Content (%)',
+                    data: results.gc_content.values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'GC Content (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sequence ID'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'GC Content Comparison'
+                    }
+                }
+            }
+        });
+        
+        // Fill the comparison details table
+        const tableBody = document.getElementById('comparisonTableBody');
+        tableBody.innerHTML = '';
+        
+        results.sequences.forEach(seq => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${seq.seq_id}</td>
+                <td>${seq.length.toLocaleString()} bp</td>
+                <td>
+                    ${seq.gc_content}%
+                    <div class="gc-content-bar">
+                        <div class="gc-content-fill" style="width: ${seq.gc_content}%"></div>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        
+        // Scroll to comparison results
+        comparisonResultsContainer.scrollIntoView({ behavior: 'smooth' });
+    }
 });
 
-// Function to download sequence data
+// Function to download sequence data (needs to be in global scope)
 function downloadSequence(seqId, dataType, sequence) {
-    // Create file content
-    const content = `>${seqId} (${dataType})\n${sequence}`;
+    // Create file name
+    const fileName = `${seqId}_${dataType}.txt`;
     
-    // Create a blob
-    const blob = new Blob([content], { type: 'text/plain' });
+    // Create blob
+    const blob = new Blob([sequence], { type: 'text/plain' });
     
-    // Create a download link
+    // Create download link
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${seqId}_${dataType}.fasta`;
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName;
     
     // Trigger download
     document.body.appendChild(a);
     a.click();
     
-    // Clean up
+    // Cleanup
+    window.URL.revokeObjectURL(a.href);
     document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
 } 

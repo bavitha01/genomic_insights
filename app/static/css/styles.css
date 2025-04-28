@@ -1,13 +1,201 @@
 /* Main Styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: #333;
     background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Genomics Landing Page */
+.genomics-landing {
+    background: rgba(250, 250, 255, 0.95);
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.genomics-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/img/image.png');
+    background-size: cover;
+    background-position: center;
+    filter: blur(6px);
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.landing-container {
+    position: relative;
+    z-index: 10;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.genomics-content {
+    max-width: 800px;
+    padding: 2rem;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.genomics-content-flat {
+    max-width: 800px;
+    padding: 2rem;
+    position: relative;
+}
+
+.genomics-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    color: #103366;
+    letter-spacing: -1px;
+}
+
+.genomics-tagline {
+    font-size: 1.6rem;
+    color: #101312;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.genomics-tagline span {
+    opacity: 0.9;
+    animation: pulsate 2s infinite alternate;
+    display: inline-block;
+}
+
+.genomics-tagline span:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.genomics-tagline span:nth-child(3) {
+    animation-delay: 1s;
+}
+
+.genomics-description {
+    margin: 2rem auto;
+    max-width: 700px;
+}
+
+.genomics-description p {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: #1e293b;
+    font-weight: 400;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+    padding: 0.5rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.genomics-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 3rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: white;
+    background: #20729e;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    text-decoration: none;
+    margin-top: 1.5rem;
+}
+
+.genomics-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #08112e;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.genomics-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(132, 75, 197, 0.4);
+    color: white;
+}
+
+.genomics-button:hover:before {
+    opacity: 1;
+}
+
+.genomics-button i {
+    margin-left: 10px;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.genomics-button:hover i {
+    transform: translateX(5px);
+}
+
+/* Footer */
+.genomics-footer {
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    color: #4b5563;
+    position: relative;
+    z-index: 10;
+    background-color: rgba(240, 245, 255, 0.9);
+    margin-top: auto;
+}
+
+.genomics-footer a {
+    color: #2563eb;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.genomics-footer a:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes pulsate {
+    0% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 /* Header */
 header {
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    background: linear-gradient(135deg, #030b18 0%, #041e44 100%);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -158,4 +346,287 @@ header {
 .btn-outline-primary {
     margin-right: 0.5rem;
     font-size: 0.85rem;
+}
+
+/* Welcome Page Styles */
+.welcome-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+    border: none;
+}
+
+.welcome-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.welcome-card .btn-lg {
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.welcome-card .btn-lg:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.welcome-card ul {
+    margin-left: 1rem;
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.welcome-card i.fs-1 {
+    font-size: 3rem !important;
+    margin-bottom: 1rem;
+}
+
+/* Options Page Styles */
+.options-page {
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin-bottom: -1px; /* Remove any gap */
+}
+
+.options-page-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/img/image.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    filter: blur(5px);
+    z-index: 0;
+}
+
+.options-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.separator span {
+    width: 80px;
+    height: 4px;
+    background: #3a86ff;
+    border-radius: 10px;
+    position: relative;
+}
+
+.separator span:before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 0;
+    width: 10px;
+    height: 4px;
+    background: #3a86ff;
+    border-radius: 10px;
+    opacity: 0.7;
+}
+
+.separator span:after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 0;
+    width: 10px;
+    height: 4px;
+    background: #3a86ff;
+    border-radius: 10px;
+    opacity: 0.7;
+}
+
+.option-card {
+    border: none;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.option-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.option-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.analyze-card .option-icon {
+    background: rgba(58, 134, 255, 0.1);
+    color: #3a86ff;
+}
+
+.compare-card .option-icon {
+    background: rgba(138, 75, 175, 0.1);
+    color: #8a4baf;
+}
+
+.feature-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 25px 0;
+}
+
+.feature-list li {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.option-btn {
+    border-radius: 30px;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border: none;
+}
+
+.analyze-card .option-btn {
+    background: linear-gradient(135deg, #3a86ff 0%, #60a5fa 100%);
+}
+
+.compare-card .option-btn {
+    background: linear-gradient(135deg, #8a4baf 0%, #9f7aea 100%);
+}
+
+.option-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.text-purple {
+    color: #9f7aea;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .options-page {
+        padding: 60px 0;
+    }
+    
+    .options-title {
+        font-size: 2.5rem;
+    }
+    
+    .genomics-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .options-title {
+        font-size: 2rem;
+    }
+    
+    .option-card {
+        margin-bottom: 30px;
+    }
+    
+    .genomics-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* Analysis Results Styles */
+.nav-tabs {
+    border-bottom: 2px solid #e9ecef;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #495057;
+    border: none;
+}
+
+.nav-tabs .nav-link.active {
+    color: #3a86ff;
+    background: none;
+    border: none;
+}
+
+.nav-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #3a86ff;
+}
+
+#resultsContainer {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#resultsContainer h3 {
+    color: #2d3748;
+    font-size: 1.75rem;
+}
+
+.sequence-stats {
+    background-color: #f8fafc;
+    border: 1px solid #e9ecef;
+}
+
+.sequence-stats h5 {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.stat-value {
+    color: #2d3748;
+    font-weight: 600;
 } 
