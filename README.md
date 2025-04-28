@@ -12,12 +12,13 @@ A bioinformatics web application designed to analyze and visualize genomic data.
 - **Transcription & Translation**: Convert DNA to RNA and protein sequences
 - **Interactive Visualization**: User-friendly interface with color-coded sequences
 - **Downloadable Results**: Export analysis results in FASTA format
+- **Modern UI**: Improved results tab design and responsive layout
 
 ## Installation
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/genomic_insights.git
+   git clone https://github.com/bavitha01/genomic_insights
    cd genomic_insights
    ```
 
@@ -47,6 +48,7 @@ A bioinformatics web application designed to analyze and visualize genomic data.
    - Upload a FASTA file using the upload form
    - Search for a sequence by GenBank ID (e.g., NM_007294 for BRCA1)
    - View analysis results for GC content, transcription, and translation
+   - Use the chat bot in the bottom-right corner to quickly access the GitHub repository, documentation, and contribution guidelines
 
 ## API Access
 
