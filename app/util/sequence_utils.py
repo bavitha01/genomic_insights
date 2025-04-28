@@ -6,7 +6,7 @@ import re
 # Set email for NCBI access - this is required for GenBank API access
 Entrez.email = "bavithareddy08@gmail.com"  # Update with your real email for production use
 Entrez.tool = "GenomicInsightsWebApp"
-Entrez.api_key = None  # Add your API key if you have one for higher rate limits
+Entrez.api_key = os.environ.get("f8d4168273ea9ff4fe422025e6ec3fd65a08")  # Add your API key if you have one for higher rate limits
 
 def process_fasta_file(file_path):
     """
@@ -51,13 +51,17 @@ def analyze_sequence(sequence):
     if isinstance(sequence, str):
         sequence = Seq(sequence)
     
-    # Calculate GC content manually
+    # Validate sequence
+    if not validate_sequence(str(sequence)):
+        raise ValueError("Invalid DNA sequence")
+    
+    # Calculate GC content
     gc_count = sequence.count("G") + sequence.count("C")
     gc_content = (gc_count / len(sequence)) * 100 if len(sequence) > 0 else 0
     
     return {
         "gc_content": round(gc_content, 2),
-        "length": len(sequence),
+        "length": len(sequence)
     }
 
 def get_transcription(sequence):
@@ -67,8 +71,12 @@ def get_transcription(sequence):
     if isinstance(sequence, str):
         sequence = Seq(sequence)
     
-    # DNA to RNA transcription (replace T with U)
-    return str(sequence.transcribe())
+    try:
+        # DNA to RNA transcription
+        return str(sequence.transcribe())
+    except Exception as e:
+        print(f"Error transcribing sequence: {e}")
+        return None
 
 def get_translation(sequence):
     """
@@ -77,12 +85,13 @@ def get_translation(sequence):
     if isinstance(sequence, str):
         sequence = Seq(sequence)
     
-    # DNA to protein translation
     try:
-        return str(sequence.translate())
+        # DNA to protein translation
+        protein = str(sequence.translate())
+        return protein if protein else None
     except Exception as e:
         print(f"Error translating sequence: {e}")
-        return "Translation error"
+        return None
 
 def validate_sequence(sequence):
     """
@@ -93,4 +102,47 @@ def validate_sequence(sequence):
     
     # Check if sequence only contains valid DNA characters (A, T, G, C, N)
     pattern = re.compile(r'^[ATGCN]+$', re.IGNORECASE)
-    return bool(pattern.match(sequence)) 
+    return bool(pattern.match(sequence))
+
+def compare_sequences(sequences_dict):
+    """
+    Compare multiple sequences and return comparative analysis
+    
+    Args:
+        sequences_dict (dict): Dictionary of sequence_id -> sequence
+        
+    Returns:
+        dict: Comparative analysis results including GC content
+    """
+    if not sequences_dict or len(sequences_dict) < 2:
+        raise ValueError("At least two sequences are required for comparison")
+    
+    # Analyze each sequence
+    comparison_results = {
+        "sequences": [],
+        "gc_content": {
+            "labels": [],
+            "values": []
+        }
+    }
+    
+    # Process each sequence
+    for seq_id, sequence in sequences_dict.items():
+        if isinstance(sequence, str):
+            sequence = Seq(sequence)
+            
+        # Calculate metrics
+        analysis = analyze_sequence(sequence)
+        
+        # Add to comparison results
+        comparison_results["sequences"].append({
+            "seq_id": seq_id,
+            "length": analysis["length"],
+            "gc_content": analysis["gc_content"]
+        })
+        
+        # Add data for visualization
+        comparison_results["gc_content"]["labels"].append(seq_id)
+        comparison_results["gc_content"]["values"].append(analysis["gc_content"])
+    
+    return comparison_results 
