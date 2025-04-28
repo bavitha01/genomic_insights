@@ -98,7 +98,7 @@ def compare_sequences():
             for seq_id, sequence in sequences.items():
                 gc_content = calculate_gc_content(sequence)
                 sequences_data.append({
-                    'id': seq_id,
+                    'seq_id': seq_id,
                     'length': len(sequence),
                     'gc_content': gc_content
                 })
@@ -116,7 +116,7 @@ def compare_sequences():
                 if sequence:
                     gc_content = calculate_gc_content(sequence)
                     sequences_data.append({
-                        'id': seq_id,
+                        'seq_id': seq_id,
                         'length': len(sequence),
                         'gc_content': gc_content
                     })
@@ -130,7 +130,7 @@ def compare_sequences():
             
         # Prepare data for GC content chart
         gc_content_data = {
-            'labels': [seq['id'] for seq in sequences_data],
+            'labels': [seq['seq_id'] for seq in sequences_data],
             'values': [seq['gc_content'] for seq in sequences_data]
         }
         
