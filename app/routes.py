@@ -5,7 +5,7 @@ from Bio.SeqUtils import gc_fraction
 import os
 from werkzeug.utils import secure_filename
 import io
-
+from app import app
 bp = Blueprint('main', __name__)
 
 # Configure Entrez
