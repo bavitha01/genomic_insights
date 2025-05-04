@@ -4,6 +4,10 @@ A bioinformatics web application designed to analyze and visualize genomic data.
 
 ![Genomic Insights](https://img.shields.io/badge/Genomic-Insights-blue)
 
+## Live Demo
+
+The application is live and accessible at: [https://genomic-insights-4wl6.onrender.com](https://genomic-insights-4wl6.onrender.com)
+
 ## Features
 
 - **FASTA File Upload**: Upload and analyze multiple DNA sequences in FASTA format
@@ -36,6 +40,12 @@ A bioinformatics web application designed to analyze and visualize genomic data.
 
 ## Usage
 
+You can either use the live version or run it locally:
+
+### Live Version
+Visit [https://genomic-insights-4wl6.onrender.com](https://genomic-insights-4wl6.onrender.com) to use the application directly.
+
+### Local Development
 1. **Start the application**:
    ```bash
    python app.py
@@ -72,23 +82,30 @@ The project follows an MVC (Model-View-Controller) architecture:
 ```
 genomic_insights/
 ├── app/                       # Application package
-│   ├── controllers/           # Controllers (business logic)
+│   ├── __init__.py           # App initialization and configuration
+│   ├── routes.py             # URL route definitions and handlers
+│   ├── controllers/          # Controllers (business logic)
 │   │   └── sequence_controller.py
-│   ├── models/                # Data models
+│   ├── models/               # Data models
 │   │   └── sequence_model.py
-│   ├── static/                # Static assets
-│   │   ├── css/               # CSS styles
-│   │   ├── img/               # Images
-│   │   └── js/                # JavaScript files
-│   ├── templates/             # HTML templates (views)
+│   ├── static/               # Static assets
+│   │   ├── css/             # CSS styles
+│   │   ├── img/             # Images
+│   │   └── js/              # JavaScript files
+│   ├── templates/            # HTML templates (views)
 │   │   └── index.html
-│   └── util/                  # Utility functions
-│       └── sequence_utils.py  # Sequence analysis utilities
-├── uploads/                   # Directory for uploaded files
-├── sample_data/               # Sample data for testing
-├── app.py                     # Main application entry point
-├── requirements.txt           # Project dependencies
-└── README.md                  # Project documentation
+│   └── util/                 # Utility functions
+│       └── sequence_utils.py # Sequence analysis utilities
+├── uploads/                  # Directory for uploaded files
+├── sample_data/             # Sample data for testing
+├── app.py                   # Main application entry point
+├── wsgi.py                  # WSGI entry point for production
+├── Procfile                 # Process file for deployment
+├── render.yaml              # Render platform configuration
+├── requirements.txt         # Project dependencies
+├── .gitignore              # Git ignore configuration
+├── LICENSE                  # MIT License file
+└── README.md               # Project documentation
 ```
 
 ## Example Data
